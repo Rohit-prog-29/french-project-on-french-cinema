@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Evolution of French Cinema</title>
+    
+    <style>
+        /* 1. Global & Theme Variables */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #003366; /* French Blue */
+            --secondary-color: #EFEFEF;
+            --card-bg: #ffffff;
+            --border-color: #dddddd;
+            --header-text: #ffffff;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #f4f4f4;
+            --primary-color: #87CEFA; /* Lighter Blue for dark */
+            --secondary-color: #2c2c2c;
+            --card-bg: #252525;
+            --border-color: #444444;
+            --header-text: #f4f4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 2. Navigation Bar */
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--header-text);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--header-text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.25rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            border-bottom: 2px solid var(--header-text);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #theme-toggle, #lang-toggle {
+            background: var(--header-text);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        #theme-toggle:hover, #lang-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* 3. Main Content & Page Switching */
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.5rem; }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* 4. Page Specific Styles */
+
+        /* --- Home Page --- */
+        .hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/hero-background.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3rem;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: var(--header-text);
+            border: 2px solid var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        /* --- History Page --- */
+        .timeline {
+            position: relative;
+            padding: 1rem 0;
+        }
+
+        .timeline-item {
+            padding: 1rem 2rem;
+            padding-left: 3rem;
+            position: relative;
+            border-left: 3px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -11px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 3px solid var(--bg-color);
+        }
+
+        .timeline-item strong {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .fun-fact {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .fun-fact h3 {
+            margin-top: 0;
+        }
+
+        /* --- Movements Page --- */
+        .movement {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        blockquote {
+            font-style: italic;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin-top: 1rem;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+        
+        .film-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+
+        .film-item {
+            text-align: center;
+            width: 120px; /* Fixed width for posters */
+        }
+
+        .film-item img {
+            width: 100%;
+            height: 180px; /* Standard poster aspect ratio */
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .film-item img:hover {
+            transform: scale(1.05);
+        }
+
+        .film-item p {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+            margin-bottom: 0;
+        }
+
+
+        /* --- Directors Page --- */
+        .directors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .director-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .director-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .director-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .director-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .director-card p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .director-card .work {
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* --- Glossary Page --- */
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .glossary-table th, 
+        .glossary-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .glossary-table thead {
+            background-color: var(--primary-color);
+            color: var(--header-text);
+        }
+
+        .glossary-table tbody tr:nth-child(even) {
+            background-color: var(--secondary-color);
+        }
+
+        /* --- Influence Page --- */
+        .influence-films-gallery {
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .influence-film-card {
+            text-align: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .influence-film-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .influence-film-card img {
+            max-width: 100%;
+            height: 220px; /* Adjust height for consistent sizing */
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        .influence-film-card h4 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0;
+        }
+
+
+        /* 5. Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+
+            nav .logo {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .nav-buttons {
+                margin-left: auto;
+                margin-top: 1rem; 
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .film-gallery {
+                justify-content: space-around; 
+            }
+            
+            .influence-films-gallery {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo" data-lang-key="navLogo">French Cinema</div>
+        <ul>
+            <li><a href="#home" class="nav-link active" data-lang-key="navHome">Home</a></li>
+            <li><a href="#history" class="nav-link" data-lang-key="navHistory">History</a></li>
+            <li><a href="#movements" class="nav-link" data-lang-key="navMovements">Movements</a></li>
+            <li><a href="#directors" class="nav-link" data-lang-key="navDirectors">Directors</a></li>
+            <li><a href="#influence" class="nav-link" data-lang-key="navInfluence">Influence</a></li>
+            <li><a href="#glossary" class="nav-link" data-lang-key="navGlossary">Glossary</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button id="lang-toggle">Français</button>
+            <button id="theme-toggle">🌙</button>
+        </div>
+    </nav>
+
+    <main>
+
+        <section id="home" class="page active">
+            <div class="hero">
+                <h1 data-lang-key="heroTitle">The Evolution of French Cinema</h1>
+                <p data-lang-key="heroSubtitle">From Lumière to La Nouvelle Vague</p>
+            </div>
+            <h2 data-lang-key="homeWelcome">Welcome</h2>
+            <p data-lang-key="homeIntro1">French cinema is more than just movies; it is an art form that has continuously reshaped global filmmaking. From the very first moving images captured by the Lumière brothers in 1895 to the rebellious, rule-breaking spirit of the New Wave in the 1960s, France has always been at the forefront of cinematic innovation.</p>
+            <p data-lang-key="homeIntro2">Join us on a journey through the movements, the masters, and the vocabulary of one of the world's most influential film industries.</p>
+            <a href="#history" class="cta-button" id="explore-btn" data-lang-key="homeExploreBtn">Explore Now</a>
+        </section>
+
+        <section id="history" class="page">
+            <h2>📜 <span data-lang-key="historyTitle">History</span></h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong data-lang-key="timeline1Title">1895: The Birth of Cinema</strong>
+                    <p data-lang-key="timeline1Desc">The Lumière brothers hold the first public screening in Paris. Films like *L'Arrivée d'un train en gare de La Ciotat* (Arrival of a Train) shock audiences with their realism.</p>
+                </div>
+                <div class="timeline-item">
+                    <strong data-lang-key="timeline2Title">1902: The Magic of Méliès</strong>
+                    <p data-lang-key="timeline2Desc">Georges Méliès releases *A Trip to the Moon (Le Voyage dans la Lune)*, introducing special effects, fantasy, and science fiction to the screen.</p>
+                </div>
+                <div class="timeline-item">
+                    <strong data-lang-key="timeline3Title">1930s: Poetic Realism</strong>
+                    <p data-lang-key="timeline3Desc">A "golden age" of French film, focusing on working-class characters, fatalism, and a moody, lyrical style. Key directors include Jean Renoir and Marcel Carné.</p>
+                </div>
+                <div class="timeline-item">
+                    <strong data-lang-key="timeline4Title">1959: The New Wave Explodes</strong>
+                    <p data-lang-key="timeline4Desc">François Truffaut's *The 400 Blows* and Jean-Luc Godard's *Breathless* (1960) reject studio conventions, using handheld cameras, jump cuts, and natural light.</p>
+                </div>
+                 <div class="timeline-item">
+                    <strong data-lang-key="timeline5Title">2000s: Digital Cinema</strong>
+                    <p data-lang-key="timeline5Desc">French cinema embraces digital technology, producing global hits like *Amélie* (2001) and continuing to innovate in genres from horror to drama.</p>
+                </div>
+            </div>
+
+            <div class="fun-fact">
+                <h3>🎬 <span data-lang-key="didYouKnow">Did You Know?</span></h3>
+                <p data-lang-key="funFactDesc">Legend has it that when the first audiences saw the Lumière brothers' film of a train arriving at a station, they were so terrified by the realistic moving image that they ran to the back of the room to avoid being hit!</p>
+            </div>
+        </section>
+
+        <section id="movements" class="page">
+            <h2>🎞️ <span data-lang-key="movementsTitle">Cinematic Movements</span></h2>
+            
+            <div class="movement">
+                <h3 data-lang-key="movement1Title">Poetic Realism (1930s)</h3>
+                <p data-lang-key="movement1Desc">This movement focused on working-class lives, often portraying characters in a fatalistic light, caught in a web of social circumstances. The style is moody, lyrical, and a precursor to both film noir and Italian neorealism.</p>
+                <p><strong data-lang-key="keyFilms">Key Films:</strong></p>
+                <div class="film-gallery">
+                    <div class="film-item">
+                        <img src="assets/film-atalante.jpg" alt="L'Atalante Poster">
+                        <p>L'Atalante (1934)</p>
+                    </div>
+                    <div class="film-item">
+                        <img src="assets/film-grande-illusion.jpg" alt="La Grande Illusion Poster">
+                        <p>La Grande Illusion (1937)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="movement">
+                <h3 data-lang-key="movement2Title">French New Wave (1950s–60s)</h3>
+                <p data-lang-key="movement2Desc">A complete rejection of traditional filmmaking. Young critics-turned-directors used handheld cameras, natural lighting, improvised dialogue, and iconic jump cuts to create a fresh, energetic, and personal style of cinema.</p>
+                <p><strong data-lang-key="keyFilms">Key Films:</strong></p>
+                <div class="film-gallery">
+                    <div class="film-item">
+                        <img src="assets/film-breathless.jpg" alt="Breathless Poster">
+                        <p data-lang-key="breathlessFilm">Breathless (1960)</p>
+                    </div>
+                    <div class="film-item">
+                        <img src="assets/film-400-blows.jpg" alt="The 400 Blows Poster">
+                        <p data-lang-key="400BlowsFilm">The 400 Blows (11959)</p>
+                    </div>
+                    <div class="film-item">
+                        <img src="assets/film-cleo.jpg" alt="Cleo from 5 to 7 Poster">
+                        <p data-lang-key="cleoFilm">Cléo from 5 to 7 (1962)</p>
+                    </div>
+                </div>
+                <blockquote data-lang-key="movement2Quote">"Photography is truth. The cinema is truth twenty-four times per second." – Jean-Luc Godard</blockquote>
+            </div>
+
+            <div class="movement">
+                <h3 data-lang-key="movement3Title">Modern French Cinema (1980s–Present)</h3>
+                <p data-lang-key="movement3Desc">A diverse landscape including the hyper-stylized "Cinéma du look" (e.g., *Diva*, *Léon: The Professional*), gritty urban dramas (*La Haine*), and internationally beloved, whimsical hits like *Amélie*.</p>
+                <p><strong data-lang-key="keyFilms">Key Films:</strong></p>
+                <div class="film-gallery">
+                    <div class="film-item">
+                        <img src="assets/film-amelie.jpg" alt="Amelie Poster">
+                        <p data-lang-key="amelieFilm">Amélie (2001)</p>
+                    </div>
+                    <div class="film-item">
+                        <img src="assets/film-intouchables.jpg" alt="The Intouchables Poster">
+                        <p data-lang-key="intouchablesFilm">The Intouchables (2011)</p>
+                    </div>
+                     <div class="film-item">
+                        <img src="assets/film-la-haine.jpg" alt="La Haine Poster">
+                        <p data-lang-key="laHaineFilm">La Haine (1995)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="directors" class="page">
+            <h2>🎬 <span data-lang-key="directorsTitle">Directors</span></h2>
+            <div class="directors-grid">
+                
+                <div class="director-card">
+                    <img src="assets/director-melies.jpeg" alt="Georges Méliès">
+                    <h3 data-lang-key="director1Name">Georges Méliès</h3>
+                    <p data-lang-key="director1Role">"Father of Special Effects"</p>
+                    <p data-lang-key="director1Bio">A former magician who saw cinema as a tool for illusion. He pioneered fantasy films and techniques like the stop-trick.</p>
+                    <p class="work"><span data-lang-key="famousWork">Famous Work</span>: *A Trip to the Moon* (1902)</p>
+                </div>
+
+                <div class="director-card">
+                    <img src="assets/director-varda.png" alt="Agnès Varda">
+                    <h3 data-lang-key="director4Name">Agnès Varda</h3>
+                    <p data-lang-key="director4Role">"Grandmother of the New Wave"</p>
+                    <p data-lang-key="director4Bio">A vital filmmaker, photographer, and artist whose unique style blurred the lines between documentary and fiction.</p>
+                    <p class="work"><span data-lang-key="famousWork">Famous Work</span>: *Cléo from 5 to 7* (1962)</p>
+                </div>
+
+                <div class="director-card">
+                    <img src="assets/director-godard.WEBP" alt="Jean-Luc Godard">
+                    <h3 data-lang-key="director2Name">Jean-Luc Godard</h3>
+                    <p data-lang-key="director2Role">"Revolutionized Editing"</p>
+                    <p data-lang-key="director2Bio">The most radical of the New Wave directors, known for his political themes, jump cuts, and deconstruction of narrative.</p>
+                    <p class="work"><span data-lang-key="famousWork">Famous Work</span>: *Breathless* (1960)</p>
+                </div>
+
+                <div class="director-card">
+                    <img src="assets/director-truffaut.WEBP" alt="François Truffaut">
+                    <h3 data-lang-key="director3Name">François Truffaut</h3>
+                    <p data-lang-key="director3Role">"Brought Emotion to Realism"</p>
+                    <p data-lang-key="director3Bio">His work is deeply personal and emotional, often focusing on themes of childhood, love, and literature. A key figure in the *auteur* theory.</p>
+                    <p class="work"><span data-lang-key="famousWork">Famous Work</span>: *The 400 Blows* (1959)</p>
+                </div>
+
+                <div class="director-card">
+                    <img src="assets/director-besson.jpg" alt="Luc Besson">
+                    <h3 data-lang-key="director5Name">Luc Besson</h3>
+                    <p data-lang-key="director5Role">"Master of Style"</p>
+                    <p data-lang-key="director5Bio">A director known for his visually striking, fast-paced action and often romanticized underdog stories in the "Cinéma du look" movement.</p>
+                    <p class="work"><span data-lang-key="famousWork">Famous Work</span>: *Léon: The Professional* (1994)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="influence" class="page">
+            <h2>🌍 <span data-lang-key="influenceTitle">Influence & Impact</span></h2>
+            <p data-lang-key="influenceIntro">French cinema's influence on the world is immeasurable. The ideas born in Paris changed how movies are made and understood everywhere.</p>
+            
+            <h3 data-lang-key="influenceSub1">The Auteur Theory</h3>
+            <p data-lang-key="influenceDesc1">The most significant concept, popularized by critics at *Cahiers du Cinéma* (many of whom became New Wave directors), was the "auteur theory." This is the idea that the director is the true "author" of a film, just as a novelist is the author of a book. This shifted the focus from studios and producers to the director as the primary creative artist.</p>
+
+            <h3 data-lang-key="influenceSub2">Inspiring the World</h3>
+            <p data-lang-key="influenceDesc2">The French New Wave directly inspired the "New Hollywood" movement of the 1970s, where directors like Martin Scorsese, Francis Ford Coppola, and Steven Spielberg took creative control to make personal films. Its influence can also be seen in Italian neorealism (which in turn influenced the New Wave), Japanese New Wave, and independent cinema worldwide.</p>
+
+            <h3 data-lang-key="famousExamples">Famous Films Influenced by French Cinema</h3>
+            <div class="influence-films-gallery">
+                <div class="influence-film-card">
+                    <img src="assets/influence-pulp-fiction.jpg" alt="Pulp Fiction Poster">
+                    <h4>Pulp Fiction (USA)</h4>
+                </div>
+                <div class="influence-film-card">
+                    <img src="assets/influence-bicycle-thieves.jpg" alt="Bicycle Thieves Poster">
+                    <h4>Bicycle Thieves (Italy)</h4>
+                </div>
+                <div class="influence-film-card">
+                    <img src="assets/influence-seven-samurai.jpg" alt="Seven Samurai Poster">
+                    <h4>Seven Samurai (Japan)</h4>
+                </div>
+                <div class="influence-film-card">
+                    <img src="assets/influence-bonnie-clyde.jpg" alt="Bonnie and Clyde Poster">
+                    <h4>Bonnie and Clyde (USA)</h4>
+                </div>
+            </div>
+        </section>
+
+        <section id="glossary" class="page">
+            <h2>📖 <span data-lang-key="glossaryTitle">Glossary / Vocabulary</span></h2>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th data-lang-key="glossaryHeader1">French Word</th>
+                        <th data-lang-key="glossaryHeader2">English Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-lang-key="gTerm1">Le cinéma</td>
+                        <td data-lang-key="gMeaning1">The cinema / The movies</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-key="gTerm2">Le réalisateur</td>
+                        <td data-lang-key="gMeaning2">Director</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-key="gTerm3">Le film muet</td>
+                        <td data-lang-key="gMeaning3">Silent film</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-key="gTerm4">La bande sonore</td>
+                        <td data-lang-key="gMeaning4">Soundtrack</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-key="gTerm5">Mise-en-scène</td>
+                        <td data-lang-key="gMeaning5">Staging (everything in the frame)</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-key="gTerm6">Auteur</td>
+                        <td data-lang-key="gMeaning6">Author (used to refer to a director with a personal style)</td>
+                    </tr>
+                    <tr>
+                        <td data-lang-key="gTerm7">La Nouvelle Vague</td>
+                        <td data-lang-key="gMeaning7">The New Wave</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 3. Translation Data ---
+        const translations = {
+            en: {
+                navLogo: "French Cinema",
+                navHome: "Home",
+                navHistory: "History",
+                navMovements: "Movements",
+                navDirectors: "Directors",
+                navInfluence: "Influence",
+                navGlossary: "Glossary",
+                heroTitle: "The Evolution of French Cinema",
+                heroSubtitle: "From Lumière to La Nouvelle Vague",
+                homeWelcome: "Welcome",
+                homeIntro1: "French cinema is more than just movies; it is an art form that has continuously reshaped global filmmaking. From the very first moving images captured by the Lumière brothers in 1895 to the rebellious, rule-breaking spirit of the New Wave in the 1960s, France has always been at the forefront of cinematic innovation.",
+                homeIntro2: "Join us on a journey through the movements, the masters, and the vocabulary of one of the world's most influential film industries.",
+                homeExploreBtn: "Explore Now",
+                historyTitle: "History",
+                timeline1Title: "1895: The Birth of Cinema",
+                timeline1Desc: "The Lumière brothers hold the first public screening in Paris. Films like *L'Arrivée d'un train en gare de La Ciotat* (Arrival of a Train) shock audiences with their realism.",
+                timeline2Title: "1902: The Magic of Méliès",
+                timeline2Desc: "Georges Méliès releases *A Trip to the Moon (Le Voyage dans la Lune)*, introducing special effects, fantasy, and science fiction to the screen.",
+                timeline3Title: "1930s: Poetic Realism",
+                timeline3Desc: "A \"golden age\" of French film, focusing on working-class characters, fatalism, and a moody, lyrical style. Key directors include Jean Renoir and Marcel Carné.",
+                timeline4Title: "1959: The New Wave Explodes",
+                timeline4Desc: "François Truffaut's *The 400 Blows* and Jean-Luc Godard's *Breathless* (1960) reject studio conventions, using handheld cameras, jump cuts, and natural light.",
+                timeline5Title: "2000s: Digital Cinema",
+                timeline5Desc: "French cinema embraces digital technology, producing global hits like *Amélie* (2001) and continuing to innovate in genres from horror to drama.",
+                didYouKnow: "Did You Know?",
+                funFactDesc: "Legend has it that when the first audiences saw the Lumière brothers' film of a train arriving at a station, they were so terrified by the realistic moving image that they ran to the back of the room to avoid being hit!",
+                movementsTitle: "Cinematic Movements",
+                movement1Title: "Poetic Realism (1930s)",
+                movement1Desc: "This movement focused on working-class lives, often portraying characters in a fatalistic light, caught in a web of social circumstances. The style is moody, lyrical, and a precursor to both film noir and Italian neorealism.",
+                keyFilms: "Key Films:",
+                breathlessFilm: "Breathless (1960)",
+                "400BlowsFilm": "The 400 Blows (1959)",
+                cleoFilm: "Cléo from 5 to 7 (1962)",
+                movement2Title: "French New Wave (1950s–60s)",
+                movement2Desc: "A complete rejection of traditional filmmaking. Young critics-turned-directors used handheld cameras, natural lighting, improvised dialogue, and iconic jump cuts to create a fresh, energetic, and personal style of cinema.",
+                movement2Quote: "\"Photography is truth. The cinema is truth twenty-four times per second.\" – Jean-Luc Godard",
+                movement3Title: "Modern French Cinema (1980s–Present)",
+                movement3Desc: "A diverse landscape including the hyper-stylized \"Cinéma du look\" (e.g., *Diva*, *Léon: The Professional*), gritty urban dramas (*La Haine*), and internationally beloved, whimsical hits like *Amélie*.",
+                amelieFilm: "Amélie (2001)",
+                intouchablesFilm: "The Intouchables (2011)",
+                laHaineFilm: "La Haine (1995)",
+                directorsTitle: "Directors",
+                director1Name: "Georges Méliès",
+                director1Role: "\"Father of Special Effects\"",
+                director1Bio: "A former magician who saw cinema as a tool for illusion. He pioneered fantasy films and techniques like the stop-trick.",
+                famousWork: "Famous Work",
+                director4Name: "Agnès Varda",
+                director4Role: "\"Grandmother of the New Wave\"",
+                director4Bio: "A vital filmmaker, photographer, and artist whose unique style blurred the lines between documentary and fiction.",
+                director2Name: "Jean-Luc Godard",
+                director2Role: "\"Revolutionized Editing\"",
+                director2Bio: "The most radical of the New Wave directors, known for his political themes, jump cuts, and deconstruction of narrative.",
+                director3Name: "François Truffaut",
+                director3Role: "\"Brought Emotion to Realism\"",
+                director3Bio: "His work is deeply personal and emotional, often focusing on themes of childhood, love, and literature. A key figure in the *auteur* theory.",
+                director5Name: "Luc Besson",
+                director5Role: "\"Master of Style\"",
+                director5Bio: "A director known for his visually striking, fast-paced action and often romanticized underdog stories in the \"Cinéma du look\" movement.",
+                influenceTitle: "Influence & Impact",
+                influenceIntro: "French cinema's influence on the world is immeasurable. The ideas born in Paris changed how movies are made and understood everywhere.",
+                influenceSub1: "The Auteur Theory",
+                influenceDesc1: "The most significant concept, popularized by critics at *Cahiers du Cinéma* (many of whom became New Wave directors), was the \"auteur theory.\" This is the idea that the director is the true \"author\" of a film, just as a novelist is the author of a book. This shifted the focus from studios and producers to the director as the primary creative artist.",
+                influenceSub2: "Inspiring the World",
+                influenceDesc2: "The French New Wave directly inspired the \"New Hollywood\" movement of the 1970s, where directors like Martin Scorsese, Francis Ford Coppola, and Steven Spielberg took creative control to make personal films. Its influence can also be seen in Italian neorealism (which in turn influenced the New Wave), Japanese New Wave, and independent cinema worldwide.",
+                famousExamples: "Famous Films Influenced by French Cinema",
+                glossaryTitle: "Glossary / Vocabulary",
+                glossaryHeader1: "French Word",
+                glossaryHeader2: "English Meaning",
+                gTerm1: "Le cinéma",
+                gMeaning1: "The cinema / The movies",
+                gTerm2: "Le réalisateur",
+                gMeaning2: "Director",
+                gTerm3: "Le film muet",
+                gMeaning3: "Silent film",
+                gTerm4: "La bande sonore",
+                gMeaning4: "Soundtrack",
+                gTerm5: "Mise-en-scène",
+                gMeaning5: "Staging (everything in the frame)",
+                gTerm6: "Auteur",
+                gMeaning6: "Author (used to refer to a director with a personal style)",
+                gTerm7: "La Nouvelle Vague",
+                gMeaning7: "The New Wave"
+            },
+            fr: {
+                navLogo: "Cinéma Français",
+                navHome: "Accueil",
+                navHistory: "Histoire",
+                navMovements: "Mouvements",
+                navDirectors: "Réalisateurs",
+                navInfluence: "Influence",
+                navGlossary: "Glossaire",
+                heroTitle: "L'Évolution du Cinéma Français",
+                heroSubtitle: "De Lumière à La Nouvelle Vague",
+                homeWelcome: "Bienvenue",
+                homeIntro1: "Le cinéma français est plus qu'un simple divertissement ; c'est une forme d'art qui a continuellement remodelé le cinéma mondial. Des toutes premières images animées capturées par les frères Lumière en 1895 à l'esprit rebelle et novateur de la Nouvelle Vague dans les années 1960, la France a toujours été à l'avant-garde de l'innovation cinématographique.",
+                homeIntro2: "Rejoignez-nous pour un voyage à travers les mouvements, les maîtres et le vocabulaire de l'une des industries cinématographiques les plus influentes au monde.",
+                homeExploreBtn: "Explorer Maintenant",
+                historyTitle: "Histoire",
+                timeline1Title: "1895 : La Naissance du Cinéma",
+                timeline1Desc: "Les frères Lumière organisent la première projection publique à Paris. Des films comme *L'Arrivée d'un train en gare de La Ciotat* choquent le public par leur réalisme.",
+                timeline2Title: "1902 : La Magie de Méliès",
+                timeline2Desc: "Georges Méliès sort *Le Voyage dans la Lune*, introduisant les effets spéciaux, la fantaisie et la science-fiction à l'écran.",
+                timeline3Title: "Années 1930 : Le Réalisme Poétique",
+                timeline3Desc: "Un \"âge d'or\" du cinéma français, centré sur des personnages de la classe ouvrière, le fatalisme et un style mélancolique et lyrique. Les réalisateurs clés incluent Jean Renoir et Marcel Carné.",
+                timeline4Title: "1959 : L'Explosion de la Nouvelle Vague",
+                timeline4Desc: "*Les 400 Coups* de François Truffaut et *À bout de souffle* (1960) de Jean-Luc Godard rejettent les conventions de studio, utilisant des caméras portables, des coupes franches et la lumière naturelle.",
+                timeline5Title: "Années 2000 : Le Cinéma Numérique",
+                timeline5Desc: "Le cinéma français adopte la technologie numérique, produisant des succès mondiaux comme *Le Fabuleux Destin d'Amélie Poulain* (2001) et continuant d'innover dans des genres allant de l'horreur au drame.",
+                didYouKnow: "Le Saviez-Vous ?",
+                funFactDesc: "La légende raconte que lorsque les premiers spectateurs ont vu le film des frères Lumière montrant un train arrivant en gare, ils étaient si terrifiés par l'image en mouvement réaliste qu'ils ont couru au fond de la salle pour éviter d'être heurtés !",
+                movementsTitle: "Mouvements Cinématographiques",
+                movement1Title: "Le Réalisme Poétique (Années 1930)",
+                movement1Desc: "Ce mouvement se concentrait sur la vie de la classe ouvrière, dépeignant souvent des personnages sous un jour fataliste, pris dans un engrenage social. Le style est mélancolique, lyrique et précurseur du film noir et du néoréalisme italien.",
+                keyFilms: "Films Clés :",
+                breathlessFilm: "À bout de souffle (1960)",
+                "400BlowsFilm": "Les 400 Coups (1959)",
+                cleoFilm: "Cléo de 5 à 7 (1962)",
+                movement2Title: "La Nouvelle Vague (Années 1950-60)",
+                movement2Desc: "Un rejet complet du cinéma traditionnel. De jeunes critiques devenus réalisateurs ont utilisé des caméras portables, un éclairage naturel, des dialogues improvisés et des 'jump cuts' emblématiques pour créer un style de cinéma frais, énergique et personnel.",
+                movement2Quote: "\"La photographie, c'est la vérité. Et le cinéma, c'est de la vérité vingt-quatre fois par seconde.\" – Jean-Luc Godard",
+                movement3Title: "Cinéma Français Moderne (1980–Présent)",
+                movement3Desc: "Un paysage diversifié incluant le \"Cinéma du look\" hyper-stylisé (par ex. *Diva*, *Léon*), des drames urbains percutants (*La Haine*), et des succès fantaisistes de renommée internationale comme *Amélie*.",
+                amelieFilm: "Le Fabuleux Destin d'Amélie Poulain (2001)",
+                intouchablesFilm: "Intouchables (2011)",
+                laHaineFilm: "La Haine (1995)",
+                directorsTitle: "Réalisateurs",
+                director1Name: "Georges Méliès",
+                director1Role: "\"Père des Effets Spéciaux\"",
+                director1Bio: "Ancien magicien qui voyait le cinéma comme un outil d'illusion. Il a été le pionnier des films de fantaisie et des techniques comme l'arrêt de caméra.",
+                famousWork: "Œuvre Célèbre",
+                director4Name: "Agnès Varda",
+                director4Role: "\"Grand-mère de la Nouvelle Vague\"",
+                director4Bio: "Cinéaste, photographe et artiste essentielle dont le style unique brouillait les frontières entre le documentaire et la fiction.",
+                director2Name: "Jean-Luc Godard",
+                director2Role: "\"A Révolutionné le Montage\"",
+                director2Bio: "Le plus radical des réalisateurs de la Nouvelle Vague, connu pour ses thèmes politiques, ses 'jump cuts' et sa déconstruction de la narration.",
+                director3Name: "François Truffaut",
+                director3Role: "\"A Apporté l'Émotion au Réalisme\"",
+                director3Bio: "Son œuvre est profondément personnelle et émotionnelle, se concentrant souvent sur les thèmes de l'enfance, de l'amour et de la littérature. Une figure clé de la théorie de *l'auteur*.",
+                director5Name: "Luc Besson",
+                director5Role: "\"Maître du Style\"",
+                director5Bio: "Un réalisateur connu pour son action visuellement frappante et rapide, et ses histoires de parias souvent romancées dans le mouvement du \"Cinéma du look\".",
+                influenceTitle: "Influence et Impact",
+                influenceIntro: "L'influence du cinéma français sur le monde est incommensurable. Les idées nées à Paris ont changé la façon dont les films sont faits et compris partout.",
+                influenceSub1: "La Théorie de l'Auteur",
+                influenceDesc1: "Le concept le plus significatif, popularisé par les critiques des *Cahiers du Cinéma* (dont beaucoup sont devenus des réalisateurs de la Nouvelle Vague), était la \"théorie de l'auteur\". C'est l'idée que le réalisateur est le véritable \"auteur\" d'un film, tout comme un romancier est l'auteur d'un livre. Cela a déplacé l'attention des studios et des producteurs vers le réalisateur en tant qu'artiste créatif principal.",
+                influenceSub2: "Inspirer le Monde",
+                influenceDesc2: "La Nouvelle Vague française a directement inspiré le mouvement du \"Nouvel Hollywood\" des années 1970, où des réalisateurs comme Martin Scorsese, Francis Ford Coppola et Steven Spielberg ont pris le contrôle créatif pour faire des films personnels. Son influence est également visible dans le néoréalisme italien (qui a à son tour influencé la Nouvelle Vague), la Nouvelle Vague japonaise et le cinéma indépendant du monde entier.",
+                famousExamples: "Films Célèbres Influencés par le Cinéma Français",
+                glossaryTitle: "Glossaire / Vocabulaire",
+                glossaryHeader1: "Mot Français",
+                glossaryHeader2: "Signification Anglaise",
+                gTerm1: "Le cinéma",
+                gMeaning1: "The cinema / The movies",
+                gTerm2: "Le réalisateur",
+                gMeaning2: "Director",
+                gTerm3: "Le film muet",
+                gMeaning3: "Silent film",
+                gTerm4: "La bande sonore",
+                gMeaning4: "Soundtrack",
+                gTerm5: "Mise-en-scène",
+                gMeaning5: "Staging (everything in the frame)",
+                gTerm6: "Auteur",
+                gMeaning6: "Author (used to refer to a director with a personal style)",
+                gTerm7: "La Nouvelle Vague",
+                gMeaning7: "The New Wave"
+            }
+        };
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- 1. Page Navigation (SPA) ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            const exploreButton = document.getElementById('explore-btn');
+
+            function showPage(pageId) {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+
+                const targetLink = document.querySelector(`a[href="#${pageId}"]`);
+                if (targetLink) {
+                    targetLink.classList.add('active');
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); 
+                    const pageId = this.getAttribute('href').substring(1);
+                    showPage(pageId);
+                });
+            });
+
+            exploreButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('href').substring(1);
+                showPage(pageId);
+            });
+
+            // --- 2. Dark/Light Mode Toggle ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                themeToggle.textContent = '☀️';
+            }
+
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.textContent = '☀️';
+                } else {
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.textContent = '🌙';
+                }
+            });
+
+            // --- 3. Language Translation Toggle ---
+            const langToggle = document.getElementById('lang-toggle');
+            let currentLang = 'en'; // Default language
+
+            // Initialize page with default language
+            setLanguage(currentLang);
+
+            function setLanguage(lang) {
+                document.querySelectorAll('[data-lang-key]').forEach(element => {
+                    const key = element.getAttribute('data-lang-key');
+                    const translation = translations[lang][key];
+                    
+                    if (translation) {
+                        if (element.tagName === 'STRONG' && element.parentElement.tagName === 'P') {
+                            element.textContent = translation;
+                        } 
+                        else if (element.tagName === 'SPAN' && (element.parentElement.tagName === 'H2' || element.parentElement.tagName === 'H3')) {
+                            element.textContent = translation;
+                        }
+                        else if (element.tagName === 'A' || element.tagName === 'BUTTON' || element.tagName === 'P' || element.tagName === 'H1' || element.tagName === 'H2' || element.tagName === 'H3' || element.tagName === 'H4' || element.tagName === 'TD' || element.tagName === 'TH' || element.tagName === 'BLOCKQUOTE' || element.tagName === 'DIV') {
+                            if (element.tagName === 'BLOCKQUOTE' && key === 'movement2Quote') {
+                                const author = " – Jean-Luc Godard";
+                                element.textContent = translation.replace(author, '') + author;
+                            } else {
+                                element.textContent = translation;
+                            }
+                        }
+                    }
+                });
+            }
+
+            langToggle.addEventListener('click', function() {
+                if (currentLang === 'en') {
+                    currentLang = 'fr';
+                    setLanguage('fr');
+                    langToggle.textContent = 'English';
+                } else {
+                    currentLang = 'en';
+                    setLanguage('en');
+                    langToggle.textContent = 'Français';
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>

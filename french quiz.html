@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Cinema Quiz</title>
+    
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tone.js for background music -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --card-bg: #252525;
+            --border-color: #444444;
+            --text-color: #f4f4f4;
+            --primary-color: #EF4135; /* French Red */
+            --secondary-color: #0055A4; /* French Blue */
+            --correct-bg: #1a4e2a;
+            --correct-border: #66BB6A;
+            --incorrect-bg: #4d2020;
+            --incorrect-border: #EF5350;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 1rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 1rem auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        #music-toggle {
+            margin-top: 1rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: 2px solid var(--secondary-color);
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: var(--secondary-color);
+            transform: scale(1.03);
+        }
+
+        #submit-quiz-btn {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+        
+        #submit-quiz-btn:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+        }
+
+        /* Quiz Styles */
+        .quiz-question {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px var(--shadow-color);
+        }
+
+        .quiz-question p {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style-type: none;
+        }
+
+        .quiz-options li {
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-options li:hover {
+            background-color: var(--border-color);
+        }
+
+        .quiz-options li label {
+            margin-left: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .quiz-options li input[type="radio"] {
+             /* Make radio buttons more visible */
+            transform: scale(1.2);
+            accent-color: var(--primary-color);
+        }
+
+        /* Result Styles */
+        .quiz-options li.correct-answer {
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            font-weight: 700;
+        }
+
+        .quiz-options li.incorrect {
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-border);
+            font-weight: 700;
+        }
+
+        #quiz-results {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            display: none; /* Hidden by default */
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .quiz-question {
+                padding: 1rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <main>
+        <header>
+            <h1>French Cinema Quiz</h1>
+            <p>Test your knowledge with 20 questions!</p>
+            <button id="music-toggle" class="btn">Toggle Music 🎵</button>
+        </header>
+        
+        <div id="quiz-container">
+            <!-- Quiz questions will be dynamically generated here -->
+        </div>
+        
+        <button id="submit-quiz-btn" class="btn">Check Answers</button>
+        
+        <div id="quiz-results"></div>
+    </main>
+
+    <script>
+        // --- 1. Quiz Data ---
+        const quizData = [
+            {
+                question: "Who directed the New Wave film 'Breathless' (À bout de souffle)?",
+                options: ["Jean-Luc Godard", "François Truffaut", "Agnès Varda"],
+                answer: "Jean-Luc Godard"
+            },
+            {
+                question: "In what year did the Lumière brothers hold the first public film screening?",
+                options: ["1902", "1895", "1959"],
+                answer: "1895"
+            },
+            {
+                question: "Which early director is known as the 'Father of Special Effects' for films like 'A Trip to the Moon'?",
+                options: ["Georges Méliès", "Auguste Lumière", "Luc Besson"],
+                answer: "Georges Méliès"
+            },
+            {
+                question: "'The 400 Blows' (Les 400 Coups) is a highly personal film by which director?",
+                options: ["Jean-Luc Godard", "Agnès Varda", "François Truffaut"],
+                answer: "François Truffaut"
+            },
+            {
+                question: "Which 1930s movement focused on working-class characters and a moody, fatalistic style?",
+                options: ["Poetic Realism", "French New Wave", "Cinéma du look"],
+                answer: "Poetic Realism"
+            },
+            {
+                question: "What is 'La Nouvelle Vague'?",
+                options: ["A famous French actor", "The New Wave", "A type of camera"],
+                answer: "The New Wave"
+            },
+            {
+                question: "Who is often called the 'Grandmother of the New Wave' for films like 'Cléo from 5 to 7'?",
+                options: ["Agnès Varda", "Luc Besson", "Georges Méliès"],
+                answer: "Agnès Varda"
+            },
+            {
+                question: "What is the core idea of the 'Auteur Theory'?",
+                options: ["All films must be in black and white", "The director is the 'author' of the film", "The script is the most important part"],
+                answer: "The director is the 'author' of the film"
+            },
+            {
+                question: "Which film is a key example of the 1980s 'Cinéma du look' movement?",
+                options: ["Amélie", "Diva", "La Haine"],
+                answer: "Diva"
+            },
+            {
+                question: "Which of these films is NOT considered part of the New Wave movement?",
+                options: ["Breathless (1960)", "The 400 Blows (1959)", "Amélie (2001)"],
+                answer: "Amélie (2001)"
+            },
+            {
+                question: "Who directed the whimsical 2001 hit 'Amélie' (Le Fabuleux Destin d'Amélie Poulain)?",
+                options: ["Mathieu Kassovitz", "Jean-Pierre Jeunet", "Luc Besson"],
+                answer: "Jean-Pierre Jeunet"
+            },
+            {
+                question: "Who was the charismatic star of 'Breathless'?",
+                options: ["Jean-Paul Belmondo", "Alain Delon", "Jean-Pierre Léaud"],
+                answer: "Jean-Paul Belmondo"
+            },
+            {
+                question: "Who directed the gritty 1995 film 'La Haine', which follows three young men in the Parisian suburbs?",
+                options: ["Mathieu Kassovitz", "Jean-Luc Godard", "Jacques Audiard"],
+                answer: "Mathieu Kassovitz"
+            },
+            {
+                question: "'La Haine' is famously shot in what style?",
+                options: ["Vibrant color", "Black and white", "Sepia tone"],
+                answer: "Black and white"
+            },
+            {
+                question: "What is the name of the famous film magazine where many New Wave directors started as critics?",
+                options: ["Paris Match", "Le Monde", "Cahiers du Cinéma"],
+                answer: "Cahiers du Cinéma"
+            },
+            {
+                question: "Who directed the 1964 musical 'The Umbrellas of Cherbourg' (Les Parapluies de Cherbourg)?",
+                options: ["Jacques Demy", "Jean Renoir", "François Truffaut"],
+                answer: "Jacques Demy"
+            },
+            {
+                question: "What is unique about 'The Umbrellas of Cherbourg'?",
+                options: ["It has no sound", "All the dialogue is sung", "It was filmed in 3D"],
+                answer: "All the dialogue is sung"
+            },
+            {
+                question: "Director Luc Besson is associated with which visually-driven movement?",
+                options: ["Poetic Realism", "New Wave", "Cinéma du look"],
+                answer: "Cinéma du look"
+            },
+            {
+                question: "Which modern French film won both the Palme d'Or and the Oscar for Best Picture?",
+                options: ["The Artist (2011)", "The Intouchables (2011)", "Blue Is the Warmest Colour (2013)"],
+                answer: "The Artist (2011)"
+            },
+            {
+                question: "Who played the title character in Agnès Varda's 'Cléo from 5 to 7'?",
+                options: ["Corinne Marchand", "Brigitte Bardot", "Jeanne Moreau"],
+                answer: "Corinne Marchand"
+            }
+        ];
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Selectors ---
+            const quizContainer = document.getElementById('quiz-container');
+            const submitQuizBtn = document.getElementById('submit-quiz-btn');
+            const quizResultsDiv = document.getElementById('quiz-results');
+            const musicToggleBtn = document.getElementById('music-toggle');
+            let musicPlaying = false;
+            let synth, loop;
+
+            // --- Functions ---
+
+            /**
+             * Dynamically builds the quiz questions and options.
+             */
+            function buildQuiz() {
+                quizContainer.innerHTML = ''; // Clear previous quiz
+                quizData.forEach((q, index) => {
+                    // Create container for the question
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'quiz-question';
+
+                    // Create question text
+                    const questionText = document.createElement('p');
+                    questionText.innerHTML = `<strong>${index + 1}. ${q.question}</strong>`;
+                    questionDiv.appendChild(questionText);
+
+                    // Create options list
+                    const optionsList = document.createElement('ul');
+                    optionsList.className = 'quiz-options';
+
+                    q.options.forEach((option, optIndex) => {
+                        const optionItem = document.createElement('li');
+                        
+                        const radioBtn = document.createElement('input');
+                        radioBtn.type = 'radio';
+                        radioBtn.name = `q${index}`;
+                        radioBtn.value = option;
+                        radioBtn.id = `q${index}_opt${optIndex}`;
+                        
+                        const label = document.createElement('label');
+                        label.textContent = option;
+                        label.htmlFor = `q${index}_opt${optIndex}`;
+
+                        optionItem.appendChild(radioBtn);
+                        optionItem.appendChild(label);
+                        optionsList.appendChild(optionItem);
+                    });
+
+                    questionDiv.appendChild(optionsList);
+                    quizContainer.appendChild(questionDiv);
+                });
+            }
+
+            /**
+             * Checks the quiz answers, calculates score, and applies styles.
+             */
+            function checkQuiz() {
+                let score = 0;
+                const total = quizData.length;
+                const allQuestions = document.querySelectorAll('.quiz-question');
+
+                allQuestions.forEach((questionDiv, index) => {
+                    const selectedRadio = questionDiv.querySelector('input[type="radio"]:checked');
+                    const optionsListItems = questionDiv.querySelectorAll('.quiz-options li');
+                    const correctAnswer = quizData[index].answer;
+                    
+                    // Clear previous results styles
+                    optionsListItems.forEach(li => {
+                        li.classList.remove('correct-answer', 'incorrect');
+                    });
+                    
+                    if (selectedRadio) {
+                        const selectedAnswer = selectedRadio.value;
+                        if (selectedAnswer === correctAnswer) {
+                            score++;
+                            selectedRadio.parentElement.classList.add('correct-answer');
+                        } else {
+                            selectedRadio.parentElement.classList.add('incorrect');
+                            // Also show the correct answer
+                            optionsListItems.forEach(li => {
+                                if (li.querySelector('label').textContent === correctAnswer) {
+                                    li.classList.add('correct-answer');
+                                }
+                            });
+                        }
+                    } else {
+                        // If no answer selected, just show the correct one
+                        optionsListItems.forEach(li => {
+                            if (li.querySelector('label').textContent === correctAnswer) {
+                                li.classList.add('correct-answer');
+                            }
+                        });
+                    }
+                });
+
+                // Display score
+                quizResultsDiv.textContent = `Your score: ${score} out of ${total}`;
+                quizResultsDiv.style.display = 'block';
+                // Scroll to results
+                quizResultsDiv.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            /**
+             * Initializes and toggles background music.
+             */
+            async function toggleMusic() {
+                if (musicPlaying) {
+                    // Stop music
+                    await Tone.Transport.stop();
+                    await Tone.Transport.cancel();
+                    if(synth) synth.dispose();
+                    musicPlaying = false;
+                    console.log("Music stopped.");
+                } else {
+                    // Start music
+                    await Tone.start(); // Required for user gesture
+                    
+                    // Create a simple, ambient synth pad
+                    synth = new Tone.PolySynth(Tone.Synth, {
+                        oscillator: { type: "fatsawtooth" },
+                        envelope: {
+                            attack: 0.1,
+                            decay: 0.2,
+                            sustain: 0.5,
+                            release: 1
+                        },
+                        volume: -20 // Quiet volume
+                    }).toDestination();
+                    
+                    const chords = [
+                        ["C4", "E4", "G4"],
+                        ["A3", "C4", "E4"],
+                        ["F3", "A3", "C4"],
+                        ["G3", "B3", "D4"]
+                    ];
+                    
+                    let chordIndex = 0;
+                    
+                    loop = new Tone.Loop(time => {
+                        const chord = chords[chordIndex % chords.length];
+                        synth.triggerAttackRelease(chord, "2m", time);
+                        chordIndex++;
+                    }, "2m").start(0); // "2m" means a 2-measure loop
+                    
+                    await Tone.Transport.start();
+                    musicPlaying = true;
+                    console.log("Music started.");
+                }
+            }
+
+            // --- Event Listeners ---
+            submitQuizBtn.addEventListener('click', checkQuiz);
+            musicToggleBtn.addEventListener('click', toggleMusic);
+
+            // --- Initialization ---
+            buildQuiz(); // Build quiz on load
+
+        });
+    </script>
+</body>
+</html>
